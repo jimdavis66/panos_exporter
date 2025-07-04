@@ -47,12 +47,14 @@ class SystemEnvironmentalsCollector(BaseCollector):
                         help_text="Fan speed in RPM",
                         labels={"fan": desc, "alarm": str(alarm).lower()}
                     ))
-            # Power sensors (voltage)
+            # Power sensors (voltage) with deduplication
+            seen_power_sensors = set()
             for entry in root.findall('.//power//entry'):
                 desc = entry.findtext('description', default='unknown')
                 volts = entry.findtext('Volts')
                 alarm = entry.findtext('alarm', default='False').lower() == 'true'
-                if volts is not None:
+                key = (desc, str(alarm).lower())
+                if volts is not None and key not in seen_power_sensors:
                     metrics.append(self.prometheus_metric(
                         metric="panos_power_sensor_volts",
                         value=volts,
@@ -60,6 +62,7 @@ class SystemEnvironmentalsCollector(BaseCollector):
                         help_text="Power sensor voltage in Volts",
                         labels={"sensor": desc, "alarm": str(alarm).lower()}
                     ))
+                    seen_power_sensors.add(key)
             # Power supply status
             for entry in root.findall('.//power-supply//entry'):
                 desc = entry.findtext('description', default='unknown')

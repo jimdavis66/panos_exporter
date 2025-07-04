@@ -96,7 +96,21 @@ class SystemInfoCollector(BaseCollector):
                     ))
         except Exception as e:
             return self.prometheus_error_metric(device_config['host'], f"system_info_parse: {e}")
-        return ''.join(metrics)
+        # Deduplicate metrics
+        seen = set()
+        deduped_metrics = []
+        for m in metrics:
+            # Extract metric name and label set from the metric string
+            lines = m.split('\n')
+            metric_line = next((l for l in lines if l and not l.startswith('#')), None)
+            if metric_line:
+                metric_name = metric_line.split('{')[0]
+                label_str = metric_line.split('{')[1].split('}')[0] if '{' in metric_line else ''
+                key = (metric_name, label_str)
+                if key not in seen:
+                    seen.add(key)
+                    deduped_metrics.append(m)
+        return ''.join(deduped_metrics)
 
     def _parse_uptime(self, uptime_str):
         # Example: '0 days, 20:32:51'

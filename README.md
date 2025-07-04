@@ -17,7 +17,7 @@ A Prometheus exporter for Palo Alto PAN-OS firewalls, written in Python. It coll
 docker run \
   -p 9654:9654 \
   -v $(pwd)/config.yaml:/app/config.yaml \
-  ghcr.io/jimdavis66/panos_exporter
+  ghcr.io/jimdavis66/panos_exporter:latest
 ```
 
 ### 1. Build and Run with Docker

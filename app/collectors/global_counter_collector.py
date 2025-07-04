@@ -57,4 +57,17 @@ class GlobalCounterCollector(BaseCollector):
                     ))
         except Exception as e:
             return self.prometheus_error_metric(device_config['host'], f"global_counter_parse: {e}")
-        return ''.join(metrics)
+        # Deduplicate metrics
+        seen = set()
+        deduped_metrics = []
+        for m in metrics:
+            lines = m.split('\n')
+            metric_line = next((l for l in lines if l and not l.startswith('#')), None)
+            if metric_line:
+                metric_name = metric_line.split('{')[0]
+                label_str = metric_line.split('{')[1].split('}')[0] if '{' in metric_line else ''
+                key = (metric_name, label_str)
+                if key not in seen:
+                    seen.add(key)
+                    deduped_metrics.append(m)
+        return ''.join(deduped_metrics)
