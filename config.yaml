@@ -1,0 +1,13 @@
+devices:
+  192.168.1.26:
+    username: prometheus
+    password: whim-swap-HOLED-72
+collectors:
+  - system_info_collector
+  - system_environmentals_collector
+  - global_counter_collector
+  - session_collector
+  - interface_collector
+  - interface_counter_collector
+  - data_processor_resource_utilization_collector
+
