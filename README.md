@@ -11,7 +11,15 @@ A Prometheus exporter for Palo Alto PAN-OS firewalls, written in Python. It coll
 - Dynamic collector selection
 - Prometheus-compliant output
 
-## Setup
+## Setup Options
+### 1. Run with Docker
+```sh
+docker run \
+  -p 9654:9654 \
+  -v $(pwd)/config.yaml:/app/config.yaml \
+  ghcr.io/jimdavis66/panos_exporter
+```
+
 ### 1. Build and Run with Docker
 ```sh
 docker build -t panos_exporter .
