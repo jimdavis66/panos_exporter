@@ -49,14 +49,17 @@ class BaseCollector(ABC):
 
     def prometheus_metric(self, metric, value, device, metric_type='gauge', help_text=None, labels=None):
         """
-        Format a Prometheus metric line with HELP/TYPE and labels. The 'device' label is now 'instance'.
+        Format a Prometheus metric line with HELP/TYPE and labels. Do not emit an 'instance' or 'device' label.
         """
         help_text = help_text or self.help_text
-        label_str = f'{"{instance=\""}{device}\"' + (',' + ','.join(f'{k}="{v}"' for k, v in (labels or {}).items()) if labels else '') + '}'
+        if labels:
+            label_str = '{' + ','.join(f'{k}="{v}"' for k, v in labels.items()) + '}'
+        else:
+            label_str = ''
         return f"# HELP {metric} {help_text}\n# TYPE {metric} {metric_type}\n{metric}{label_str} {value}\n"
 
     def prometheus_error_metric(self, device, error):
         """
-        Emit a Prometheus error metric for a failed scrape. The 'device' label is now 'instance'.
+        Emit a Prometheus error metric for a failed scrape. Do not emit an 'instance' or 'device' label.
         """
-        return f"# HELP panos_error Error metric\n# TYPE panos_error gauge\npanos_error{{instance=\"{device}\",error=\"{error}\"}} 1\n"
+        return f"# HELP panos_error Error metric\n# TYPE panos_error gauge\npanos_error{{error=\"{error}\"}} 1\n"
