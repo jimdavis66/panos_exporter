@@ -23,6 +23,7 @@ class GlobalCounterCollector(BaseCollector):
             device = device_config['host']
             for entry in root.findall('.//global//counters//entry'):
                 name = entry.findtext('name', default='unknown')
+                name = self.sanitize_metric_name(name)
                 value = entry.findtext('value')
                 rate = entry.findtext('rate')
                 severity = entry.findtext('severity', default='unknown')

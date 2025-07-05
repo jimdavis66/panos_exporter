@@ -35,11 +35,12 @@ class DataProcessorResourceUtilizationCollector(BaseCollector):
                         if val and val.endswith('%'):
                             try:
                                 value = float(val.rstrip('%'))
+                                tag = self.sanitize_metric_name(tchild.tag)
                                 metrics.append(self.prometheus_metric(
-                                    metric=f"panos_data_processor_task_{tchild.tag}",
+                                    metric=f"panos_data_processor_task_{tag}",
                                     value=value,
                                     device=device,
-                                    help_text=f"Data processor {tchild.tag} utilization (%)",
+                                    help_text=f"Data processor {tag} utilization (%)",
                                     labels={"dp": dp_name}
                                 ))
                             except ValueError:
@@ -83,6 +84,7 @@ class DataProcessorResourceUtilizationCollector(BaseCollector):
                 if res_util is not None:
                     for entry in res_util.findall('entry'):
                         res_name = entry.findtext('name')
+                        res_name = self.sanitize_metric_name(res_name) if res_name is not None else None
                         value = entry.findtext('value')
                         if res_name is not None and value is not None:
                             try:

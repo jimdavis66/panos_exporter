@@ -32,11 +32,12 @@ class InterfaceCounterCollector(BaseCollector):
                         continue
                     try:
                         value = int(child.text)
+                        tag = self.sanitize_metric_name(child.tag)
                         metrics.append(self.prometheus_metric(
-                            metric=f"panos_interface_counter_{child.tag}",
+                            metric=f"panos_interface_counter_{tag}",
                             value=value,
                             device=device,
-                            help_text=f"Interface counter: {child.tag}",
+                            help_text=f"Interface counter: {tag}",
                             labels={"interface": iface}
                         ))
                     except (ValueError, TypeError):
@@ -47,11 +48,12 @@ class InterfaceCounterCollector(BaseCollector):
                     for pchild in port:
                         try:
                             value = int(pchild.text)
+                            tag = self.sanitize_metric_name(pchild.tag)
                             metrics.append(self.prometheus_metric(
-                                metric=f"panos_interface_counter_{pchild.tag}",
+                                metric=f"panos_interface_counter_{tag}",
                                 value=value,
                                 device=device,
-                                help_text=f"Interface port counter: {pchild.tag}",
+                                help_text=f"Interface port counter: {tag}",
                                 labels={"interface": iface}
                             ))
                         except (ValueError, TypeError):
@@ -66,11 +68,12 @@ class InterfaceCounterCollector(BaseCollector):
                         continue
                     try:
                         value = int(child.text)
+                        tag = self.sanitize_metric_name(child.tag)
                         metrics.append(self.prometheus_metric(
-                            metric=f"panos_interface_counter_{child.tag}",
+                            metric=f"panos_interface_counter_{tag}",
                             value=value,
                             device=device,
-                            help_text=f"Interface ifnet counter: {child.tag}",
+                            help_text=f"Interface ifnet counter: {tag}",
                             labels={"interface": iface}
                         ))
                     except (ValueError, TypeError):
@@ -80,11 +83,12 @@ class InterfaceCounterCollector(BaseCollector):
                         for cchild in child:
                             try:
                                 value = int(cchild.text)
+                                tag = self.sanitize_metric_name(cchild.tag)
                                 metrics.append(self.prometheus_metric(
-                                    metric=f"panos_interface_counter_{cchild.tag}",
+                                    metric=f"panos_interface_counter_{tag}",
                                     value=value,
                                     device=device,
-                                    help_text=f"Interface ifnet counters: {cchild.tag}",
+                                    help_text=f"Interface ifnet counters: {tag}",
                                     labels={"interface": iface}
                                 ))
                             except (ValueError, TypeError):

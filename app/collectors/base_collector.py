@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from abc import ABC, abstractmethod
 import logging
 from requests.adapters import HTTPAdapter, Retry
+import re
 
 class BaseCollector(ABC):
     """
@@ -63,3 +64,10 @@ class BaseCollector(ABC):
         Emit a Prometheus error metric for a failed scrape. Do not emit an 'instance' or 'device' label.
         """
         return f"# HELP panos_error Error metric\n# TYPE panos_error gauge\npanos_error{{error=\"{error}\"}} 1\n"
+
+    @staticmethod
+    def sanitize_metric_name(name):
+        """
+        Sanitize a metric name to match Prometheus regex [a-zA-Z_:][a-zA-Z0-9_:]* by replacing any character not in [a-zA-Z0-9_] with an underscore.
+        """
+        return re.sub(r'[^a-zA-Z0-9_]', '_', name)
