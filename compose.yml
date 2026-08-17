@@ -1,6 +1,6 @@
 services:
   panos_exporter:
-    image: ghcr.io/jimdavis66/panos_exporter:sha-7369bd2
+    image: ghcr.io/jimdavis66/panos_exporter:latest
     restart: unless-stopped
     ports:
       - "${PORT:-9654}:${PORT:-9654}"

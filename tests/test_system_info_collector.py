@@ -1,4 +1,3 @@
-import pytest
 from app.collectors.system_info_collector import SystemInfoCollector
 
 SAMPLE_XML = '''
