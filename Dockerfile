@@ -1,23 +1,25 @@
-FROM python:3.13-slim-bookworm
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    FLASK_ENV=production
+# syntax=docker/dockerfile:1
+FROM dhi.io/python:3.14-dev@sha256:b4b5ea6a19c0d92dd737ba2dacb92bc0c2650b771f58864def15ae977716f4ad AS builder
 
 WORKDIR /app
 
-# Install dependencies
 COPY requirements.txt ./
+RUN python -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+COPY app ./app
 
-# (Optional) Create a non-root user for security
-RUN adduser --disabled-password --no-create-home --gecos '' appuser && chown -R appuser /app
-USER appuser
+FROM dhi.io/python:3.14@sha256:9566f423e8bfeec5f2acd3bda4e9040a397431e1d8b90210252bc85e4eb2b04a
 
-EXPOSE 9654
+WORKDIR /app
 
-# Use Gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:9654", "--access-logfile", "-", "app.app:app"]
+COPY --from=builder /app/venv /app/venv
+COPY app ./app
+COPY config.yaml ./
+
+ENV PATH="/app/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+
+ENTRYPOINT ["/app/venv/bin/python"]
+CMD ["-m", "app.gunicorn_entrypoint"]

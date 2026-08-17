@@ -1,0 +1,13 @@
+services:
+  panos_exporter:
+    image: ghcr.io/jimdavis66/panos_exporter:latest
+    restart: unless-stopped
+    ports:
+      - "9654:9654"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      PORT: "9654"
+      WEB_CONCURRENCY: "2"
+      GUNICORN_THREADS: "4"
+      GUNICORN_TIMEOUT: "30"

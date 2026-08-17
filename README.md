@@ -12,19 +12,26 @@ A Prometheus exporter for Palo Alto PAN-OS firewalls, written in Python. It coll
 - Prometheus-compliant output
 
 ## Setup Options
-### 1. Run with Docker
+### 1. Run with Docker Compose
+See `compose.yml` for a production example. From the repo root, with `config.yaml` in place:
+
 ```sh
-docker run \
-  -p 9654:9654 \
-  -v $(pwd)/config.yaml:/app/config.yaml \
-  ghcr.io/jimdavis66/panos_exporter:latest
+docker compose up -d
 ```
 
 ### 1. Build and Run with Docker
+Local builds pull Docker Hardened Images from `dhi.io`, so log in first:
+
 ```sh
+docker login dhi.io
 docker build -t panos_exporter .
 docker run -p 9654:9654 -v $(pwd)/config.yaml:/app/config.yaml panos_exporter
 ```
+
+### Why `app/gunicorn_entrypoint.py` exists
+This image is built on a minimal Python base that **does not include a shell** (no `sh`). That means we can’t reliably use a shell-form `CMD` like `sh -c "gunicorn ..."` to expand environment variables.
+
+Instead, `app/gunicorn_entrypoint.py` reads runtime settings from environment variables (like `PORT`, worker/thread counts, timeouts) and then `exec()`s `gunicorn` directly, which is more robust in minimal containers and keeps configuration env-driven.
 
 ### 2. Local Development
 ```sh
