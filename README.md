@@ -42,6 +42,9 @@ Instead, `app/gunicorn_entrypoint.py` reads runtime settings from environment va
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements-dev.txt
+ruff check app tests
+ruff format --check app tests
+pytest
 export FLASK_ENV=development
 python -m app.app
 ```
