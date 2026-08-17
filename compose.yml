@@ -3,11 +3,12 @@ services:
     image: ghcr.io/jimdavis66/panos_exporter:sha-7369bd2
     restart: unless-stopped
     ports:
-      - "9654:9654"
+      - "${PORT:-9654}:${PORT:-9654}"
     volumes:
       - ./config.yaml:/app/config.yaml:ro
     environment:
-      PORT: "9654"
-      WEB_CONCURRENCY: "2"
-      GUNICORN_THREADS: "4"
-      GUNICORN_TIMEOUT: "30"
+      PORT: ${PORT:-9654}
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      DEBUG: ${DEBUG:-0}
