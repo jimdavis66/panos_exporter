@@ -20,9 +20,7 @@ class RoutingRouteCollector(BaseCollector):
     def _api_command(self, device_config):
         vr = device_config.get("virtual_router", "default")
         return (
-            f"<show><routing><route>"
-            f"<virtual-router>{vr}</virtual-router>"
-            f"</route></routing></show>"
+            f"<show><routing><route><virtual-router>{vr}</virtual-router></route></routing></show>"
         )
 
     def collect(self, device_config):
@@ -81,7 +79,5 @@ class RoutingRouteCollector(BaseCollector):
                     except ValueError:
                         pass
         except Exception as e:
-            return self.prometheus_error_metric(
-                device_config["host"], f"routing_route_parse: {e}"
-            )
+            return self.prometheus_error_metric(device_config["host"], f"routing_route_parse: {e}")
         return "".join(dedupe_metrics(metrics))

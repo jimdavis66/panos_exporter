@@ -118,9 +118,7 @@ class RoutingBgpCollector(BaseCollector):
                 xml_data = self._fetch_op(device_config, cmd)
                 metrics.append(parsers[subname](xml_data, device_config))
             except Exception as e:
-                self.logger.error(
-                    f"BGP {subname} error for device={device_config['host']}: {e}"
-                )
+                self.logger.error(f"BGP {subname} error for device={device_config['host']}: {e}")
                 errors.append(
                     self.prometheus_error_metric(
                         device_config["host"],
@@ -407,9 +405,7 @@ class RoutingBgpCollector(BaseCollector):
                     "prefix": member.findtext("prefix", default="unknown"),
                     "peer": member.findtext("peer", default="unknown"),
                     "nexthop": (member.findtext("nexthop") or "").strip(),
-                    "advertise_status": member.findtext(
-                        "advertise-status", default="unknown"
-                    ),
+                    "advertise_status": member.findtext("advertise-status", default="unknown"),
                     "as_path": member.findtext("as-path", default=""),
                 }
                 metrics.append(
