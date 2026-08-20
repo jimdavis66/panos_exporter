@@ -3,7 +3,7 @@
 A Prometheus exporter for Palo Alto PAN-OS firewalls, written in Python. It collects operational and performance metrics via the XML-API and exposes them in Prometheus format. This project is strongly influenced by [jenningsloy318/panos_exporter](https://github.com/jenningsloy318/panos_exporter) 
 
 ## Features
-- Collects metrics from 7 key PAN-OS diagnostic endpoints
+- Collects metrics from 11 PAN-OS diagnostic and routing endpoints
 - Modular collector framework
 - YAML-based device and collector configuration
 - Production-ready Docker container
@@ -56,6 +56,7 @@ devices:
   192.168.1.15:
     username: user
     password: pass
+    virtual_router: default
 collectors:
   - system_info_collector
   - system_environmentals_collector
@@ -64,9 +65,27 @@ collectors:
   - interface_collector
   - interface_counter_collector
   - data_processor_resource_utilization_collector
+  - routing_resource_collector
+  - routing_summary_collector
+  - routing_route_collector
+  - routing_bgp_collector
 ```
 - `devices`: Map of device IP/hostname to credentials
+- `virtual_router`: Optional per-device setting used by `routing_route_collector` (defaults to `default`)
 - `collectors`: List of collectors to run (omit for all)
+
+Available collectors:
+- `system_info_collector`
+- `system_environmentals_collector`
+- `global_counter_collector`
+- `session_collector`
+- `interface_collector`
+- `interface_counter_collector`
+- `data_processor_resource_utilization_collector`
+- `routing_resource_collector`
+- `routing_summary_collector`
+- `routing_route_collector`
+- `routing_bgp_collector`
 
 ## Prometheus Integration
 ### prometheus.yml

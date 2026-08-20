@@ -49,6 +49,10 @@ class ConfigLoader:
                     "interface_collector",
                     "interface_counter_collector",
                     "data_processor_resource_utilization_collector",
+                    "routing_resource_collector",
+                    "routing_summary_collector",
+                    "routing_route_collector",
+                    "routing_bgp_collector",
                 ]
             )
             if not isinstance(self.config["collectors"], list):

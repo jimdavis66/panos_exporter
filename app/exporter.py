@@ -4,6 +4,10 @@ from app.collectors.data_processor_resource_utilization_collector import (
 from app.collectors.global_counter_collector import GlobalCounterCollector
 from app.collectors.interface_collector import InterfaceCollector
 from app.collectors.interface_counter_collector import InterfaceCounterCollector
+from app.collectors.routing_bgp_collector import RoutingBgpCollector
+from app.collectors.routing_resource_collector import RoutingResourceCollector
+from app.collectors.routing_route_collector import RoutingRouteCollector
+from app.collectors.routing_summary_collector import RoutingSummaryCollector
 from app.collectors.session_collector import SessionCollector
 from app.collectors.system_environmentals_collector import SystemEnvironmentalsCollector
 from app.collectors.system_info_collector import SystemInfoCollector
@@ -16,6 +20,10 @@ COLLECTOR_CLASS_MAP = {
     "interface_collector": InterfaceCollector,
     "interface_counter_collector": InterfaceCounterCollector,
     "data_processor_resource_utilization_collector": DataProcessorResourceUtilizationCollector,
+    "routing_resource_collector": RoutingResourceCollector,
+    "routing_summary_collector": RoutingSummaryCollector,
+    "routing_route_collector": RoutingRouteCollector,
+    "routing_bgp_collector": RoutingBgpCollector,
 }
 
 
@@ -44,6 +52,10 @@ class Exporter:
                 InterfaceCollector(),
                 InterfaceCounterCollector(),
                 DataProcessorResourceUtilizationCollector(),
+                RoutingResourceCollector(),
+                RoutingSummaryCollector(),
+                RoutingRouteCollector(),
+                RoutingBgpCollector(),
             ]
 
     def collect_metrics(self, target):
